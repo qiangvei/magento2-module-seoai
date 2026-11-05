@@ -157,6 +157,7 @@ class Product extends JsonLd
 
     private function resolveBrand(CatalogProduct $product, string $storeCode): string
     {
+        $brandName = '';
         if ($product->getResource()->getAttribute('brand') && $product->getData('brand')) {
             $brandName = $product->getAttributeText('brand');
         }elseif ($product->getManufacturer()) {
