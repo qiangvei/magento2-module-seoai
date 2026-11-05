@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="admin-1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Qiangvei\SeoAi\Block\Adminhtml\Audit\Report"
+                   name="seoai.audit.report"
+                   template="Qiangvei_SeoAi::audit/report.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

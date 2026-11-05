@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- ===== Preferences ===== -->
+    <preference for="Qiangvei\SeoAi\Api\RobotsBuilderInterface"
+                type="Qiangvei\SeoAi\Model\RobotsBuilder"/>
+    <preference for="Qiangvei\SeoAi\Api\LlmsGeneratorInterface"
+                type="Qiangvei\SeoAi\Model\LlmsGenerator"/>
+    <preference for="Qiangvei\SeoAi\Api\WatermarkProcessorInterface"
+                type="Qiangvei\SeoAi\Model\Watermark\Processor"/>
+
+    <!-- ===== Type configuration ===== -->
+    <type name="Qiangvei\SeoAi\Block\Schema\JsonLd">
+        <arguments>
+            <argument name="serializer" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+
+    <!-- ===== Remove Luma default SEO + Generate meta from templates ===== -->
+    <type name="Qiangvei\SeoAi\Model\RobotsBuilder">
+        <arguments>
+            <argument name="knownBots" xsi:type="array">
+                <item name="gptbot" xsi:type="string">seoai/geo/bot_gptbot</item>
+                <item name="googleextended" xsi:type="string">seoai/geo/bot_googleextended</item>
+                <item name="claudebot" xsi:type="string">seoai/geo/bot_claudebot</item>
+                <item name="anthropicai" xsi:type="string">seoai/geo/bot_anthropicai</item>
+                <item name="perplexitybot" xsi:type="string">seoai/geo/bot_perplexitybot</item>
+                <item name="ccbot" xsi:type="string">seoai/geo/bot_ccbot</item>
+                <item name="bytespider" xsi:type="string">seoai/geo/bot_bytespider</item>
+                <item name="imagesift" xsi:type="string">seoai/geo/bot_imagesift</item>
+                <item name="omgili" xsi:type="string">seoai/geo/bot_omgili</item>
+                <item name="diffbot" xsi:type="string">seoai/geo/bot_diffbot</item>
+            </argument>
+            <argument name="botUserAgents" xsi:type="array">
+                <item name="gptbot" xsi:type="string">GPTBot</item>
+                <item name="googleextended" xsi:type="string">Google-Extended</item>
+                <item name="claudebot" xsi:type="string">ClaudeBot</item>
+                <item name="anthropicai" xsi:type="string">Claude-Web</item>
+                <item name="perplexitybot" xsi:type="string">PerplexityBot</item>
+                <item name="ccbot" xsi:type="string">CCBot</item>
+                <item name="bytespider" xsi:type="string">Bytespider</item>
+                <item name="imagesift" xsi:type="string">ImagesiftBot</item>
+                <item name="omgili" xsi:type="string">omgilibot</item>
+                <item name="diffbot" xsi:type="string">Diffbot</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Open Graph / Twitter Card injection into rendered <head> -->
+    <type name="Magento\Theme\Block\Html\Head">
+        <plugin name="qiangvei_seoai_head_open_graph"
+                type="Qiangvei\SeoAi\Plugin\Head\AddOpenGraph"
+                sortOrder="20"/>
+        <!--
+            Migrates product structured data from microdata to JSON-LD:
+            strips leftover itemscope/itemprop/itemtype microdata and neutralises
+            noscript blocks that confuse Rich Results Test. Runs after OG so the
+            final head markup is sanitised last.
+        -->
+        <plugin name="qiangvei_seoai_head_sanitize"
+                type="Qiangvei\SeoAi\Plugin\Head\SanitizeHead"
+                sortOrder="25"/>
+    </type>
+
+    <!-- Sitemap plugin to add llms.txt link -->
+    <type name="Magento\Sitemap\Controller\Index\Index">
+        <plugin name="qiangvei_seoai_sitemap_llms"
+                type="Qiangvei\SeoAi\Plugin\Sitemap\AddLlmsLink"
+                sortOrder="10"/>
+    </type>
+
+    <!-- Serve /robots.txt from RobotsBuilder when the module is enabled -->
+    <type name="Magento\Robots\Controller\Index\Index">
+        <plugin name="qiangvei_seoai_robots_controller"
+                type="Qiangvei\SeoAi\Plugin\Robots\Controller"
+                sortOrder="10"/>
+    </type>
+</config>

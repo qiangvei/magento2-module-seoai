@@ -1,0 +1,26 @@
+{
+    "name": "qiangvei/magento2-module-seoai",
+    "description": "Magento 2.4.9 SEO + AEO + GEO module. Full Google SEO, answer-engine (AEO) and generative-engine (GEO) optimization. Replaces Luma default SEO.",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": ["MIT"],
+    "require": {
+        "php": "~8.4.0 || ~8.5.0",
+        "magento/framework": "*",
+        "magento/module-store": "*",
+        "magento/module-catalog": "*",
+        "magento/module-cms": "*",
+        "magento/module-sitemap": "*",
+        "magento/module-theme": "*",
+        "magento/module-backend": "*",
+        "magento/module-eav": "*",
+        "ext-json": "*",
+        "ext-gd": "*"
+    },
+    "autoload": {
+        "files": ["registration.php"],
+        "psr-4": {
+            "Qiangvei\\SeoAi\\": ""
+        }
+    }
+}

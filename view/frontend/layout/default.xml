@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+    Global layout: registers every schema block on a head container so they can
+    emit their JSON-LD <script> tags. Each block is gated by its own config
+    flag via ifconfig; a block whose getGraph() returns null renders nothing.
+
+    Blocks render into the head (via referenceContainer head.additional) so the
+    JSON-LD sits inside <head> where crawlers expect it.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- head.additional is a container, so it must be referenced as one. -->
+        <referenceContainer name="head.additional">
+            <!-- Organization / LocalBusiness entity (GEO) — homepage & global -->
+            <block class="Qiangvei\SeoAi\Block\Schema\Organization"
+                   name="seoai.schema.organization"
+                   ifconfig="seoai/schema/organization_enabled"
+                   template="Qiangvei_SeoAi::schema/ld.phtml"/>
+            <!-- WebSite + SearchAction -->
+            <block class="Qiangvei\SeoAi\Block\Schema\WebSite"
+                   name="seoai.schema.website"
+                   ifconfig="seoai/schema/website_search_enabled"
+                   template="Qiangvei_SeoAi::schema/ld.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

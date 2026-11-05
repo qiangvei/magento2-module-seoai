@@ -1,0 +1,82 @@
+<?php
+/**
+ * @var \Qiangvei\SeoAi\Block\Adminhtml\Batch\Form $block
+ */
+?>
+<form method="post"
+      action="<?= $block->escapeUrl($block->getFormActionUrl()) ?>"
+      id="seoai-batch-form"
+      class="seoai-batch-form">
+    <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+
+    <fieldset class="fieldset admin__fieldset">
+        <legend class="legend"><span><?= $block->escapeHtml(__('Batch Meta Generator')) ?></span></legend>
+
+        <div class="admin__field field field-store_id">
+            <label class="label admin__field-label" for="store_id">
+                <span><?= $block->escapeHtml(__('Store View')) ?></span>
+            </label>
+            <div class="admin__field-control control">
+                <select id="store_id" name="store_id" class="admin__control-select">
+                    <?php foreach ($block->getStoreOptions() as $option): ?>
+                        <option value="<?= $block->escapeHtmlAttr((string) $option['value']) ?>">
+                            <?= $block->escapeHtml((string) $option['label']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="note">
+                    <?= $block->escapeHtml(__('Meta values are written in the selected store scope.')) ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin__field field field-attribute_set_id">
+            <label class="label admin__field-label" for="attribute_set_id">
+                <span><?= $block->escapeHtml(__('Attribute Set')) ?></span>
+            </label>
+            <div class="admin__field-control control">
+                <select id="attribute_set_id" name="attribute_set_id" class="admin__control-select">
+                    <?php foreach ($block->getAttributeSetOptions() as $option): ?>
+                        <option value="<?= (int) $option['value'] ?>">
+                            <?= $block->escapeHtml((string) $option['label']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="admin__field field field-product_ids">
+            <label class="label admin__field-label" for="product_ids">
+                <span><?= $block->escapeHtml(__('Product IDs')) ?></span>
+            </label>
+            <div class="admin__field-control control">
+                <textarea id="product_ids" name="product_ids" rows="4"
+                          class="admin__control-textarea"
+                          placeholder="<?= $block->escapeHtmlAttr(__('e.g. 12, 34, 56')) ?>"></textarea>
+                <div class="note">
+                    <?= $block->escapeHtml(__('Comma or newline separated. Leave empty to use the Attribute Set filter.')) ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin__field field field-overwrite">
+            <label class="label admin__field-label" for="overwrite">
+                <span><?= $block->escapeHtml(__('Overwrite Existing Values')) ?></span>
+            </label>
+            <div class="admin__field-control control">
+                <select id="overwrite" name="overwrite" class="admin__control-select">
+                    <option value="0"><?= $block->escapeHtml(__('No — skip products that already have meta values')) ?></option>
+                    <option value="1"><?= $block->escapeHtml(__('Yes — overwrite all selected products')) ?></option>
+                </select>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="actions">
+        <button type="submit"
+                class="action-primary scalable save"
+                title="<?= $block->escapeHtmlAttr(__('Generate Meta')) ?>">
+            <span><?= $block->escapeHtml(__('Generate Meta')) ?></span>
+        </button>
+    </div>
+</form>

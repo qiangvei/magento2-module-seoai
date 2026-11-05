@@ -1,0 +1,349 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="seoai" translate="label" sortOrder="900">
+            <label>SEO &amp; AI (AEO/GEO)</label>
+        </tab>
+        <section id="seoai" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>SEO &amp; AI Optimization</label>
+            <tab>seoai</tab>
+            <resource>Qiangvei_SeoAi::config</resource>
+
+            <!-- ============================================================ -->
+            <!-- SEO 基建 -->
+            <!-- ============================================================ -->
+            <group id="seo" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>SEO - Search Engine (Google/Bing)</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable SEO Module</label>
+                    <comment>Master switch. When enabled, this module takes over all SEO output and removes Luma defaults.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title_suffix" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Global Title Suffix</label>
+                    <comment>Appended to all page titles. Leave empty to disable. e.g. " | My Store"</comment>
+                </field>
+                <field id="meta_desc_enabled" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Generate Meta Description</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="canonical_enabled" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Canonical URLs</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="strip_params" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Strip Tracking/Sort Params from Canonical</label>
+                    <comment>Removes utm_*, sort, dir, limit, p, etc. from canonical URL to consolidate ranking.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="hreflang_enabled" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable hreflang Tags</label>
+                    <comment>Adds hreflang alternate links for multi-language/multi-store setups.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="product_meta_tpl" translate="label comment" type="textarea" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Meta Title Template</label>
+                    <comment>Variables: {{name}}, {{sku}}, {{price}}, {{brand}}, {{category}}, {{short_description}}, {{store_name}}</comment>
+                </field>
+                <field id="product_meta_desc_tpl" translate="label comment" type="textarea" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Meta Description Template</label>
+                    <comment>Same variables as above. Recommended: {{short_description}}</comment>
+                </field>
+                <field id="category_meta_tpl" translate="label comment" type="textarea" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Category Meta Title Template</label>
+                    <comment>Variables: {{name}}, {{description}}, {{store_name}}</comment>
+                </field>
+                <field id="category_meta_desc_tpl" translate="label comment" type="textarea" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Category Meta Description Template</label>
+                </field>
+            </group>
+
+            <!-- ============================================================ -->
+            <!-- 结构化数据 -->
+            <!-- ============================================================ -->
+            <group id="schema" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Structured Data (JSON-LD) - SEO + AEO</label>
+                <field id="product_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Schema</label>
+                    <comment>Outputs schema.org/Product with price, availability, brand, aggregateRating.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="breadcrumb_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>BreadcrumbList Schema</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="organization_enabled" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Organization Schema</label>
+                    <comment>Homepage Organization/LocalBusiness entity for GEO brand recognition.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="website_search_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>WebSite + SearchAction Schema</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="faq_enabled" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>FAQPage Schema (AEO)</label>
+                    <comment>Reads FAQ from product/category attribute "seoai_faq" (JSON: [{"q":"","a":""}]) and outputs FAQPage schema.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="howto_enabled" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>HowTo Schema (AEO)</label>
+                    <comment>Reads HowTo from CMS page/product attribute "seoai_howto" (JSON: [{"name":"","text":"","url":""}]).</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="suppress_microdata" translate="label comment" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Suppress Magento Microdata</label>
+                    <comment>Removes Luma's itemscope/itemprop microdata so this module's JSON-LD is the single source of product structured data. Recommended ON.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="handle_noscript" translate="label comment" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Handle noscript Blocks</label>
+                    <comment>Neutralises noscript markup that can trigger Rich Results Test "JS disabled" false positives.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="brand" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default Brand</label>
+                    <comment>Fallback brand when product has no brand attribute.</comment>
+                </field>
+
+                <!-- ============================================================ -->
+                <!-- Merchant listing (Google required: shipping + returns) -->
+                <!-- ============================================================ -->
+                <field id="merchant_heading" translate="label" type="text" sortOrder="72" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label><![CDATA[<strong>Merchant Listing (Google required)</strong>]]></label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+                <field id="shipping_country" translate="label comment" type="text" sortOrder="73" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Shipping Destination Country</label>
+                    <comment>ISO 3166-1 alpha-2, e.g. "US". Leave empty to omit shippingDetails.</comment>
+                </field>
+                <field id="shipping_rate" translate="label comment" type="text" sortOrder="74" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Shipping Rate</label>
+                    <comment>Flat rate value in store currency. Use "0" for free shipping.</comment>
+                </field>
+                <field id="shipping_handling_min" translate="label" type="text" sortOrder="75" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Handling Time Min (days)</label>
+                </field>
+                <field id="shipping_handling_max" translate="label" type="text" sortOrder="76" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Handling Time Max (days)</label>
+                </field>
+                <field id="shipping_transit_min" translate="label" type="text" sortOrder="77" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Transit Time Min (days)</label>
+                </field>
+                <field id="shipping_transit_max" translate="label" type="text" sortOrder="78" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Transit Time Max (days)</label>
+                </field>
+                <field id="return_country" translate="label comment" type="text" sortOrder="79" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Return Policy Country</label>
+                    <comment>ISO 3166-1 alpha-2, e.g. "US". Leave empty to omit hasMerchantReturnPolicy.</comment>
+                </field>
+                <field id="return_days" translate="label comment" type="text" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Merchant Return Days</label>
+                    <comment>Number of days the customer has to return. Use 0 to omit the return policy.</comment>
+                </field>
+                <field id="return_method" translate="label comment" type="select" sortOrder="81" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Return Method</label>
+                    <source_model>Qiangvei\SeoAi\Model\Config\Source\ReturnMethod</source_model>
+                </field>
+                <field id="return_fees" translate="label comment" type="select" sortOrder="82" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Return Fees</label>
+                    <source_model>Qiangvei\SeoAi\Model\Config\Source\ReturnFees</source_model>
+                </field>
+
+                <field id="organization_name" translate="label" type="text" sortOrder="83" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Organization Legal Name</label>
+                </field>
+                <field id="organization_logo" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Organization Logo URL</label>
+                </field>
+                <field id="organization_same_as" translate="label comment" type="textarea" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Organization sameAs (Social Profiles)</label>
+                    <comment>One URL per line. Used for entity disambiguation in GEO.</comment>
+                </field>
+            </group>
+
+            <!-- ============================================================ -->
+            <!-- AEO -->
+            <!-- ============================================================ -->
+            <group id="aeo" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>AEO - Answer Engine Optimization</label>
+                <comment>Optimizes content for AI answer engines (Google AI Overview, Perplexity, Bing Copilot).</comment>
+                <field id="faq_html_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Render Visible FAQ Block (Human + AI)</label>
+                    <comment>Outputs an HTML FAQ section on PDP alongside the schema so content matches structured data.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="llms_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable /llms.txt Endpoint</label>
+                    <comment>AI-friendly site index at /seoai/llms/index. Links products/categories in markdown format.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="llms_full_enabled" translate="label comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable /llms-full.txt (Full Content)</label>
+                    <comment>Larger endpoint containing full product descriptions for AI training/extraction.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="llms_summary" translate="label comment" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>LLMs.txt Site Summary</label>
+                    <comment>Top-level description of your site for AI engines. e.g. "&gt; We sell premium outdoor gear..."</comment>
+                </field>
+                <field id="markdown_enabled" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Markdown Product View (?format=md)</label>
+                    <comment>Appending ?format=md to any PDP URL returns clean Markdown for AI/headless consumption.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <!-- ============================================================ -->
+            <!-- GEO -->
+            <!-- ============================================================ -->
+            <group id="geo" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>GEO - Generative Engine Optimization</label>
+                <comment>Controls AI crawler access and brand entity signals.</comment>
+                <field id="robots_enabled" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Dynamic robots.txt Management</label>
+                    <comment>When enabled, this module overrides robots.txt with its own rules including AI bot directives.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="ai_bots_header" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label><![CDATA[<strong>AI Bot Access Controls</strong> (Enabled = Block)]]></label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+                <field id="bot_gptbot" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Block GPTBot (OpenAI)</label>
+                    <comment>Used by ChatGPT for browsing and training data.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="bot_googleextended" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Block Google-Extended</label>
+                    <comment>Powers Gemini/AI Overview training. Blocking does NOT affect Google Search indexing.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="bot_claudebot" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Block ClaudeBot (Anthropic)</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="bot_anthropicai" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Block Claude-Web (Anthropic)</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="bot_perplexitybot" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Block PerplexityBot</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="bot_ccbot" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Block CCBot (Common Crawl)</label>
+                    <comment>Feeds many AI training datasets.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="bot_bytespider" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Block Bytespider (ByteDance/TikTok)</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="bot_imagesift" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Block ImagesiftBot</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="bot_omgili" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Block omgilibot</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="bot_diffbot" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Block Diffbot</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="entity_header" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label><![CDATA[<strong>Brand Entity Signals (GEO)</strong>]]></label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+                <field id="entity_name" translate="label comment" type="text" sortOrder="120" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Brand Name (Exact)</label>
+                    <comment>Canonical brand name used consistently across all outputs.</comment>
+                </field>
+                <field id="entity_phone" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Business Phone (NAP)</label>
+                </field>
+                <field id="entity_address" translate="label" type="textarea" sortOrder="140" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Business Address</label>
+                </field>
+                <field id="brand_same_as" translate="label comment" type="textarea" sortOrder="150" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Brand sameAs URLs</label>
+                    <comment>Wikipedia, Crunchbase, LinkedIn, social profiles. One per line. Critical for AI to trust brand entity.</comment>
+                </field>
+                <field id="custom_rules" translate="label comment" type="textarea" sortOrder="160" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Custom robots.txt Rules</label>
+                    <comment>Appended verbatim to the generated robots.txt. One directive per line, e.g. "Disallow: /private/".</comment>
+                </field>
+            </group>
+
+            <!-- ============================================================ -->
+            <!-- Open Graph / Social -->
+            <!-- ============================================================ -->
+            <group id="og" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Open Graph &amp; Social Cards</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Open Graph Tags</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="twitter_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Twitter Card Tags</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="twitter_site" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Twitter @handle</label>
+                </field>
+                <field id="og_image_enabled" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto-Generate OG Images</label>
+                    <comment>Falls back to product/category image. 1200x630 recommended.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="watermark_enabled" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Watermark OG Images</label>
+                    <comment>Adds your logo/brand to generated OG images. Requires GD.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="watermark_image" translate="label" type="image" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Watermark Image</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">seoai/watermark</upload_dir>
+                    <base_url type="media" scope_info="1">seoai/watermark</base_url>
+                </field>
+                <field id="watermark_opacity" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Watermark Opacity (0-100)</label>
+                </field>
+                <field id="watermark_position" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Watermark Position</label>
+                    <source_model>Qiangvei\SeoAi\Model\Config\Source\WatermarkPosition</source_model>
+                </field>
+                <field id="default_og_image" translate="label" type="image" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default OG Image (fallback)</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">seoai/og</upload_dir>
+                    <base_url type="media" scope_info="1">seoai/og</base_url>
+                </field>
+            </group>
+
+            <!-- ============================================================ -->
+            <!-- Sitemap -->
+            <!-- ============================================================ -->
+            <group id="sitemap" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Sitemap Enhancements</label>
+                <field id="image_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add Image Tags to Product Sitemap</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="news_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add Google News Tags (CMS pages)</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="add_llms_link" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add /llms.txt Reference to robots.txt</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

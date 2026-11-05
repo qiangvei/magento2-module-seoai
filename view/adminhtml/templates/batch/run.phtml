@@ -1,0 +1,22 @@
+<?php
+/**
+ * Confirmation placeholder for the batch run POST endpoint.
+ *
+ * The Run action redirects back to the batch form on completion, so this
+ * template is only shown if the POST result is rendered directly.
+ *
+ * @var \Magento\Backend\Block\Template $block
+ */
+?>
+<div class="message message-notice notice">
+    <div>
+        <?= $block->escapeHtml(__('Batch meta generation request submitted. Redirecting back to the generator...')) ?>
+    </div>
+</div>
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+        $(function () {
+            window.location.href = '<?= $block->escapeUrl($block->getUrl('seoai/batch/index')) ?>';
+        });
+    });
+</script>

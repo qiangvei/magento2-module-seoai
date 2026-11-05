@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!-- CMS pages (incl. homepage): breadcrumb + page-level FAQ/HowTo schema. -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="head.additional">
+            <block class="Qiangvei\SeoAi\Block\Schema\Breadcrumb"
+                   name="seoai.schema.breadcrumb"
+                   ifconfig="seoai/schema/breadcrumb_enabled"
+                   template="Qiangvei_SeoAi::schema/ld.phtml"/>
+            <block class="Qiangvei\SeoAi\Block\Schema\Faq"
+                   name="seoai.schema.faq"
+                   ifconfig="seoai/schema/faq_enabled"
+                   template="Qiangvei_SeoAi::schema/ld.phtml"/>
+            <block class="Qiangvei\SeoAi\Block\Schema\HowTo"
+                   name="seoai.schema.howto"
+                   ifconfig="seoai/schema/howto_enabled"
+                   template="Qiangvei_SeoAi::schema/ld.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

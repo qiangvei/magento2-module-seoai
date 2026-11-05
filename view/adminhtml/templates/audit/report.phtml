@@ -1,0 +1,62 @@
+<?php
+/**
+ * @var \Qiangvei\SeoAi\Block\Adminhtml\Audit\Report $block
+ */
+
+$rows = [
+    [
+        'label' => __('Total Products'),
+        'value' => $block->getTotalProducts(),
+        'note'  => __('All products in the catalog.'),
+    ],
+    [
+        'label' => __('Missing Meta Title'),
+        'value' => $block->getMissingMetaTitleCount(),
+        'note'  => __('Products without a meta_title. Run the Batch Meta Generator to fill these.'),
+    ],
+    [
+        'label' => __('Missing Meta Description'),
+        'value' => $block->getMissingMetaDescriptionCount(),
+        'note'  => __('Products without a meta_description.'),
+    ],
+    [
+        'label' => __('Missing FAQ (AEO)'),
+        'value' => $block->getMissingFaqCount(),
+        'note'  => __('Products without seoai_faq content for FAQPage schema.'),
+    ],
+];
+?>
+<div class="seoai-audit-report">
+    <table class="data-table admin__table-primary">
+        <thead>
+            <tr>
+                <th><?= $block->escapeHtml(__('Check')) ?></th>
+                <th class="a-center"><?= $block->escapeHtml(__('Count')) ?></th>
+                <th><?= $block->escapeHtml(__('Guidance')) ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($rows as $row): ?>
+                <tr>
+                    <td><?= $block->escapeHtml((string) $row['label']) ?></td>
+                    <td class="a-center"><strong><?= (int) $row['value'] ?></strong></td>
+                    <td><?= $block->escapeHtml((string) $row['note']) ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <div class="message message-notice notice" style="margin-top: 12px;">
+        <div>
+            <?= $block->escapeHtml(__('Canonical handling')) ?>:
+            <strong>
+                <?= $block->escapeHtml(
+                    $block->isCanonicalEnabled()
+                        ? (string) __('Enabled')
+                        : (string) __('Disabled')
+                ) ?>
+            </strong>.
+            <?= $block->escapeHtml(__('When disabled, duplicate-content signals are not consolidated by the module.')) ?>
+        </div>
+    </div>
+</div>

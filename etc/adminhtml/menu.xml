@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Qiangvei_SeoAi::seoai"
+             title="SEO &amp; AI (AEO/GEO)"
+             module="Qiangvei_SeoAi"
+             sortOrder="90"
+             parent="Magento_Backend::stores"
+             action="adminhtml/system_config/edit/section/seoai"
+             resource="Qiangvei_SeoAi::config"/>
+        <add id="Qiangvei_SeoAi::batch_meta"
+             title="Batch Meta Generator"
+             module="Qiangvei_SeoAi"
+             sortOrder="91"
+             parent="Magento_Backend::stores"
+             action="seoai/batch/index"
+             resource="Qiangvei_SeoAi::batch"/>
+        <add id="Qiangvei_SeoAi::audit"
+             title="SEO/AEO Audit"
+             module="Qiangvei_SeoAi"
+             sortOrder="92"
+             parent="Magento_Backend::stores"
+             action="seoai/audit/index"
+             resource="Qiangvei_SeoAi::audit"/>
+    </menu>
+</config>

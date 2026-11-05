@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+    Product page:
+      1. Emit Product, BreadcrumbList and FAQPage (AEO) JSON-LD into <head>.
+      2. Render the visible FAQ HTML block so the on-page content matches the
+         structured data (a Google requirement for FAQ rich results).
+      3. Suppress Luma's legacy microdata (itemscope/itemprop/itemtype) so this
+         module's JSON-LD is the single, authoritative source of product
+         structured data. The <body> itemscope/itemtype attributes and the
+         add_attribute="itemprop=..." arguments on the title/SKU/description
+         blocks are overridden to empty values.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!--
+            Strip the body-level microdata scope Luma sets via
+            <attribute name="itemtype"/> / <attribute name="itemscope"/> in
+            Magento_Catalog's catalog_product_view.xml. Overriding them to an
+            empty value removes the attributes from the rendered <body>.
+        -->
+        <attribute name="itemtype" value=""/>
+        <attribute name="itemscope" value=""/>
+
+        <referenceContainer name="head.additional">
+            <block class="Qiangvei\SeoAi\Block\Schema\Product"
+                   name="seoai.schema.product"
+                   ifconfig="seoai/schema/product_enabled"
+                   template="Qiangvei_SeoAi::schema/ld.phtml"/>
+            <block class="Qiangvei\SeoAi\Block\Schema\Breadcrumb"
+                   name="seoai.schema.breadcrumb"
+                   ifconfig="seoai/schema/breadcrumb_enabled"
+                   template="Qiangvei_SeoAi::schema/ld.phtml"/>
+            <block class="Qiangvei\SeoAi\Block\Schema\Faq"
+                   name="seoai.schema.faq"
+                   ifconfig="seoai/schema/faq_enabled"
+                   template="Qiangvei_SeoAi::schema/ld.phtml"/>
+            <block class="Qiangvei\SeoAi\Block\Schema\HowTo"
+                   name="seoai.schema.howto"
+                   ifconfig="seoai/schema/howto_enabled"
+                   template="Qiangvei_SeoAi::schema/ld.phtml"/>
+        </referenceContainer>
+
+        <!--
+            Remove the itemprop="name" microdata from the page title block.
+        -->
+        <referenceBlock name="page.main.title">
+            <arguments>
+                <argument name="add_base_attribute" xsi:type="string"/>
+            </arguments>
+        </referenceBlock>
+
+        <!--
+            Remove itemprop="sku" and itemprop="description" from the SKU and
+            short-description blocks by clearing their add_attribute argument.
+        -->
+        <referenceBlock name="product.info.sku">
+            <arguments>
+                <argument name="add_attribute" xsi:type="string"/>
+            </arguments>
+        </referenceBlock>
+        <referenceBlock name="product.info.overview">
+            <arguments>
+                <argument name="add_attribute" xsi:type="string"/>
+            </arguments>
+        </referenceBlock>
+
+        <!-- Visible FAQ block for AEO (human-readable + AI-extractable). -->
+        <referenceContainer name="product.info.main">
+            <block class="Qiangvei\SeoAi\Block\Schema\Faq"
+                   name="seoai.faq.html"
+                   ifconfig="seoai/aeo/faq_html_enabled"
+                   template="Qiangvei_SeoAi::schema/faq-html.phtml"
+                   after="-"/>
+        </referenceContainer>
+    </body>
+</page>

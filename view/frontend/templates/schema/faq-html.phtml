@@ -1,0 +1,28 @@
+<?php
+declare(strict_types=1);
+/**
+ * Visible FAQ block for AEO. Renders a semantic section with questions as
+ * headings and answers as plain text (no inline HTML) so answer engines can
+ * reliably extract them.
+ *
+ * @var \Qiangvei\SeoAi\Block\Schema\Faq $block
+ */
+$items = $block->getFaqItems();
+if ($items === []) {
+    return;
+}
+?>
+<section class="seoai-faq" aria-labelledby="seoai-faq-title">
+    <h2 id="seoai-faq-title"><?= $block->escapeHtml(__('FAQ')) ?></h2>
+    <dl class="seoai-faq__list">
+        <?php foreach ($items as $item): ?>
+            <?php if ($item['q'] === '' && $item['a'] === '') { continue; } ?>
+            <div class="seoai-faq__item">
+                <dt class="seoai-faq__question">
+                    <h3><?= $block->escapeHtml($item['q']) ?></h3>
+                </dt>
+                <dd class="seoai-faq__answer"><?= $block->escapeHtml($item['a']) ?></dd>
+            </div>
+        <?php endforeach; ?>
+    </dl>
+</section>

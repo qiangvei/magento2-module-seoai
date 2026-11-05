@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <seoai>
+            <!-- ===== General / SEO 基建 ===== -->
+            <seo>
+                <enabled>1</enabled>
+                <title_suffix/>
+                <meta_desc_enabled>1</meta_desc_enabled>
+                <canonical_enabled>1</canonical_enabled>
+                <strip_params>1</strip_params>
+                <hreflang_enabled>0</hreflang_enabled>
+                <product_meta_tpl>{name}</product_meta_tpl>
+                <product_meta_desc_tpl>{short_description}</product_meta_desc_tpl>
+                <category_meta_tpl>{name}</category_meta_tpl>
+                <category_meta_desc_tpl>{description}</category_meta_desc_tpl>
+            </seo>
+
+            <!-- ===== 结构化数据 (SEO/AEO 基础) ===== -->
+            <schema>
+                <product_enabled>1</product_enabled>
+                <breadcrumb_enabled>1</breadcrumb_enabled>
+                <organization_enabled>1</organization_enabled>
+                <website_search_enabled>1</website_search_enabled>
+                <faq_enabled>1</faq_enabled>
+                <howto_enabled>1</howto_enabled>
+                <!-- Suppression of legacy Magento microdata (itemscope/itemprop). -->
+                <suppress_microdata>1</suppress_microdata>
+                <!-- Strip noscript blocks that confuse Rich Results Test. -->
+                <handle_noscript>1</handle_noscript>
+                <brand/>
+                <organization_name/>
+                <organization_logo/>
+                <organization_same_as/>
+                <!--
+                    Google merchant listing required fields.
+                    These provide global defaults; a product-level attribute can override them.
+                -->
+                <!-- Shipping (OfferShippingDetails) -->
+                <shipping_country>US</shipping_country>
+                <shipping_rate>0</shipping_rate>
+                <shipping_handling_min>0</shipping_handling_min>
+                <shipping_handling_max>1</shipping_handling_max>
+                <shipping_transit_min>5</shipping_transit_min>
+                <shipping_transit_max>12</shipping_transit_max>
+                <!-- Returns (MerchantReturnPolicy) -->
+                <return_country>US</return_country>
+                <return_days>30</return_days>
+                <return_method>https://schema.org/ReturnByMail</return_method>
+                <return_fees>https://schema.org/FreeReturn</return_fees>
+            </schema>
+
+            <!-- ===== AEO (答案引擎优化) ===== -->
+            <aeo>
+                <faq_html_enabled>1</faq_html_enabled>
+                <llms_enabled>1</llms_enabled>
+                <markdown_enabled>1</markdown_enabled>
+                <llms_summary/>
+                <llms_full_enabled>1</llms_full_enabled>
+            </aeo>
+
+            <!-- ===== GEO (生成式引擎优化) ===== -->
+            <geo>
+                <robots_enabled>1</robots_enabled>
+                <!-- 默认禁止主流 AI 训练/抓取爬虫 -->
+                <bot_gptbot>1</bot_gptbot>
+                <bot_googleextended>1</bot_googleextended>
+                <bot_claudebot>1</bot_claudebot>
+                <bot_anthropicai>1</bot_anthropicai>
+                <bot_perplexitybot>1</bot_perplexitybot>
+                <bot_ccbot>1</bot_ccbot>
+                <bot_bytespider>1</bot_bytespider>
+                <bot_imagesift>1</bot_imagesift>
+                <bot_omgili>1</bot_omgili>
+                <bot_diffbot>1</bot_diffbot>
+                <entity_name/>
+                <entity_phone/>
+                <entity_address/>
+                <brand_same_as/>
+            </geo>
+
+            <!-- ===== Open Graph / 社媒卡片 ===== -->
+            <og>
+                <enabled>1</enabled>
+                <twitter_enabled>1</twitter_enabled>
+                <twitter_site/>
+                <og_image_enabled>1</og_image_enabled>
+                <watermark_enabled>1</watermark_enabled>
+                <watermark_image/>
+                <watermark_opacity>60</watermark_opacity>
+                <watermark_position>br</watermark_position>
+                <default_og_image/>
+            </og>
+
+            <!-- ===== Sitemap 增强 ===== -->
+            <sitemap>
+                <image_enabled>1</image_enabled>
+                <news_enabled>0</news_enabled>
+                <add_llms_link>1</add_llms_link>
+            </sitemap>
+        </seoai>
+    </default>
+</config>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Qiangvei_SeoAi::config" title="SEO &amp; AI Configuration" sortOrder="100">
+                    <resource id="Qiangvei_SeoAi::batch" title="Batch Meta Generator" sortOrder="10"/>
+                    <resource id="Qiangvei_SeoAi::audit" title="SEO/AEO Audit" sortOrder="20"/>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
