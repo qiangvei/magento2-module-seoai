@@ -6,8 +6,6 @@ namespace Qiangvei\SeoAi\Block\Schema;
 use Magento\Catalog\Helper\Image;
 use Magento\Catalog\Model\Product as CatalogProduct;
 use Magento\Framework\Registry;
-use Magento\Review\Model\ResourceModel\Review\Summary\CollectionFactory as SummaryCollectionFactory;
-use Magento\Review\Model\ResourceModel\Review\Product\CollectionFactory as ReviewCollectionFactory;
 
 /**
  * Product schema.org/Product node for the current product page.
@@ -20,8 +18,6 @@ class Product extends JsonLd
 {
     private Registry $registry;
     private Image $imageHelper;
-    private SummaryCollectionFactory $summaryCollectionFactory;
-    private ReviewCollectionFactory $reviewCollectionFactory;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -29,14 +25,10 @@ class Product extends JsonLd
         \Qiangvei\SeoAi\Helper\Config $config,
         Registry $registry,
         Image $imageHelper,
-        SummaryCollectionFactory $summaryCollectionFactory,
-        ReviewCollectionFactory $reviewCollectionFactory,
         array $data = []
     ) {
         $this->registry = $registry;
         $this->imageHelper = $imageHelper;
-        $this->summaryCollectionFactory = $summaryCollectionFactory;
-        $this->reviewCollectionFactory = $reviewCollectionFactory;
         parent::__construct($context, $serializer, $config, $data);
     }
 
@@ -87,22 +79,36 @@ class Product extends JsonLd
             $graph['offers'] = $offers;
         }
 
-        $storeId = (int) $store->getId();
-
+        
         try {
-            $rating = $this->buildAggregateRating($product, $storeId);
-            if ($rating !== null) {
-                $graph['aggregateRating'] = $rating;
+            
+                $summaryCollectionFactory = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Review\Model\ResourceModel\Review\Summary\CollectionFactory::class);
+                
+                $summaryCollection = $summaryCollectionFactory->create()
+                    ->addStoreFilter($store->getId())
+                    ->addFieldToFilter('entity_pk_value', $product->getId())
+                    ->load();
+                
+                $summaryData = $summaryCollection->getFirstItem();
+                
+                if ($summaryData && $summaryData->getReviewsCount() > 0) {
+                    $ratingSum = (int)$summaryData->getRatingSummary();
+                    $reviewCount = (int)$summaryData->getReviewsCount();
+                    if ($reviewCount > 0) {
+                        // Magento 评分是 0-100，Schema 期望 1-5
+                        $ratingValue = round(($ratingSum / 20), 1);
+                        $graph['aggregateRating'] = [
+                            '@type'       => 'AggregateRating',
+                            'ratingValue' => (string)$ratingValue,
+                            'reviewCount' => (string)$reviewCount,
+                            'bestRating'  => 5,
+                            'worstRating' => '1',
+                        ];
+                    }
+                }
+            } catch (\Exception $e) {
+                // 忽略异常，防止因评论表未初始化或异常而导致页面崩溃
             }
-
-            $reviews = $this->buildReviews($product, $storeId);
-            if ($reviews !== []) {
-                $graph['review'] = $reviews;
-            }
-        } catch (\Throwable $e) {
-            // Reviews are optional structured data; never let a review-API
-            // issue break the product page or the rest of the JSON-LD.
-        }
 
         // 4. 【条件注入】全球贸易代码 GTIN / 制造商编号 MPN
         // 假设你在后台建立了名为 gtin 和 mpn 的产品属性
@@ -277,121 +283,29 @@ class Product extends JsonLd
     }
 
     /**
-     * AggregateRating resolved from the review summary table.
+     * Load the review-summary row for the product from the cached aggregate
+     * table, keyed by (product id, website id) — the way Magento's own review
+     * summary block does it.
      *
-     * getRatingSummary()/getReviewCount() are NOT EAV attributes, so they are
-     * null on a product loaded outside a review-summary join; we query the
-     * Magento_Review summary collection directly instead.
-     */
-    private function buildAggregateRating(CatalogProduct $product, int $storeId): ?array
-    {
-        $summary = $this->loadSummary($product, $storeId);
-        if ($summary === null) {
-            return null;
-        }
-
-        $rating = $summary->getData('rating_summary'); // 0-100 percent
-        $count = $summary->getData('reviews_count');
-        if ($rating === null || (int) $count === 0) {
-            return null;
-        }
-
-        return [
-            '@type'       => 'AggregateRating',
-            'ratingValue' => (string) round(((float) $rating / 100) * 5, 1),
-            'reviewCount' => (int) $count,
-            'bestRating'  => '5',
-            'worstRating' => '1',
-        ];
-    }
-
-    /**
-     * Individual Review nodes for the product, most recent first.
+     * getRatingSummary()/getReviewsCount() are NOT EAV attributes, so they are
+     * null on a plain product object; this is the correct source for them.
      *
-     * Only approved reviews with a rating are emitted; the review body is the
-     * Review's description (a Google requirement for review rich results).
-     *
-     * @return array<int, array<string,mixed>>
+     * Instantiated via ObjectManager (rather than a constructor dependency)
+     * so that any variance in the review summary factory/table across
+     * environments is caught by the caller's try/catch and simply results in
+     * the aggregateRating node being omitted, never a broken page.
      */
-    private function buildReviews(CatalogProduct $product, int $storeId): array
+    private function loadReviewSummary(CatalogProduct $product): ?\Magento\Framework\DataObject
     {
-        $reviews = [];
-        $collection = $this->reviewCollectionFactory->create();
-        $collection->addEntityFilter($product->getId())
-            ->addStatusFilter(\Magento\Review\Model\Review::STATUS_APPROVED)
-            ->addStoreFilter($storeId)
-            ->addRateVotes()
-            ->setOrder('review_id', 'DESC')
-            ->setPageSize(10);
+        $factory = \Magento\Framework\App\ObjectManager::getInstance()
+            ->get(\Magento\Review\Model\Review\SummaryFactory::class);
+        $summary = $factory->create();
+        $summary->load($product->getId(), (int) $this->_storeManager->getStore()->getWebsiteId());
 
-        foreach ($collection->getItems() as $review) {
-            $title = $this->cleanText((string) $review->getTitle());
-            $detail = $this->cleanText((string) $review->getDetail());
-            if ($title === '' && $detail === '') {
-                continue;
-            }
-
-            $ratingValue = $this->resolveReviewRating($review);
-            $node = [
-                '@type'         => 'Review',
-                'author'        => [
-                    '@type' => 'Person',
-                    'name'  => $this->cleanText((string) $review->getNickname()) ?: 'Customer',
-                ],
-                'name'          => $title !== '' ? $title : $detail,
-                'reviewBody'    => $detail !== '' ? $detail : $title,
-                'datePublished' => $this->cleanText((string) $review->getCreatedAt()),
-            ];
-
-            if ($ratingValue !== null) {
-                $node['reviewRating'] = [
-                    '@type'       => 'Rating',
-                    'ratingValue' => (string) $ratingValue,
-                    'bestRating'  => '5',
-                    'worstRating' => '1',
-                ];
-            }
-
-            $reviews[] = $node;
-        }
-
-        return $reviews;
-    }
-
-    /**
-     * Resolve a 1-5 star rating for a single review from its rate votes.
-     */
-    private function resolveReviewRating($review): ?int
-    {
-        $votes = $review->getRatingVotes();
-        if (!$votes || $votes->getSize() === 0) {
+        if (!$summary->getId()) {
             return null;
         }
 
-        $total = 0;
-        $n = 0;
-        foreach ($votes as $vote) {
-            $total += (int) $vote->getValue();
-            $n++;
-        }
-
-        if ($n === 0) {
-            return null;
-        }
-
-        // Magento stores vote values as percentages of a 5-star scale.
-        return (int) max(1, min(5, (int) round(($total / $n) / 100 * 5)));
-    }
-
-    /**
-     * Load the cached review-summary row for the product.
-     */
-    private function loadSummary(CatalogProduct $product, int $storeId): ?\Magento\Framework\DataObject
-    {
-        $collection = $this->summaryCollectionFactory->create();
-        $collection->addEntityPkFilter($product->getId())
-            ->addStoreFilter($storeId);
-
-        return $collection->getFirstItem();
+        return $summary;
     }
 }
