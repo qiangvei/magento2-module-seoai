@@ -75,4 +75,21 @@
                 type="Qiangvei\SeoAi\Plugin\Robots\Controller"
                 sortOrder="10"/>
     </type>
+
+    <!--
+        Strip legacy HTML microdata from the assembled page <body> (e.g.
+        Magento_Review's itemprop="aggregateRating" that lacks itemReviewed) so
+        Google only sees this module's authoritative JSON-LD.
+
+        Hooked on Layout::getOutput() — the source string that Full Page Cache
+        stores — so the strip applies to both fresh renders and cache hits, and
+        sees the whole <body> (unlike the Head::toHtml SanitizeHead plugin,
+        which only sees <head>). Guarded by the schema/strip_body_microdata
+        config flag.
+    -->
+    <type name="Magento\Framework\View\Layout">
+        <plugin name="qiangvei_seoai_strip_body_microdata"
+                type="Qiangvei\SeoAi\Plugin\Response\StripBodyMicrodata"
+                sortOrder="10"/>
+    </type>
 </config>

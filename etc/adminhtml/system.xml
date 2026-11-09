@@ -102,6 +102,11 @@
                     <comment>Neutralises noscript markup that can trigger Rich Results Test "JS disabled" false positives.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="strip_body_microdata" translate="label comment" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Strip Body Microdata (Reviews)</label>
+                    <comment>Removes invalid body microdata like Magento_Review's itemprop="aggregateRating" (missing itemReviewed) so Google only sees this module's JSON-LD. Recommended ON.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <field id="brand" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Brand</label>
                     <comment>Fallback brand when product has no brand attribute.</comment>

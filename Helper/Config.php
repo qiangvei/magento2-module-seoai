@@ -164,6 +164,19 @@ class Config extends AbstractHelper
     }
 
     /**
+     * Whether to strip legacy microdata from the full page <body> (not just the
+     * <head>). Magento_Review's native templates emit itemprop="aggregateRating"
+     * and itemprop="ratingValue" without the Google-required itemReviewed,
+     * which Rich Results Test reports as an invalid microdata node. When the
+     * JSON-LD is authoritative, stripping these keeps Google from seeing a
+     * second, incomplete source.
+     */
+    public function isStripBodyMicrodata(?string $store = null): bool
+    {
+        return $this->isSetFlag('schema/strip_body_microdata', $store);
+    }
+
+    /**
      * Whether to strip <noscript> blocks that confuse Rich Results Test.
      */
     public function isHandleNoscript(?string $store = null): bool

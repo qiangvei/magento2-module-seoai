@@ -27,6 +27,9 @@
                 <howto_enabled>1</howto_enabled>
                 <!-- Suppression of legacy Magento microdata (itemscope/itemprop). -->
                 <suppress_microdata>1</suppress_microdata>
+                <!-- Strip legacy microdata from the full page <body> (e.g. Magento_Review's
+                     itemprop="aggregateRating" which lacks itemReviewed). Default ON. -->
+                <strip_body_microdata>1</strip_body_microdata>
                 <!-- Strip noscript blocks that confuse Rich Results Test. -->
                 <handle_noscript>1</handle_noscript>
                 <brand/>
